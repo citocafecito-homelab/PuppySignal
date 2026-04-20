@@ -57,6 +57,7 @@ jobs:
           push: true
           # ${{ steps.prep.outputs.full_image_name }}:${{ env.IMAGE_TAG }}
           tags: |
+            ${{ steps.prep.outputs.full_image_name }}:beta-${{ github.run_id }}
             ${{ steps.prep.outputs.full_image_name }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
