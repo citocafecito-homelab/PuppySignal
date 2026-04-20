@@ -1,0 +1,44 @@
+name: "OCI Image Builder"
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Custom tag'
+        default: 'latest'
+
+env: 
+  REGISTRY: ghcr.io
+  IMAGE_TAG: ${{ github.event.inputs.tag || 'latest' }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v6
+    
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and Push
+        run: |
+          # Frontend
+          docker build ./found-webapp -t ${{ IMAGE }}-webapp:${{ env.IMAGE_TAG }}
+          docker push ${{ IMAGE }}-webapp:${{ env.IMAGE_TAG }}
+
+          # Backend
+          docker build ./backend -t ${{ IMAGE }}-backend:${{ env.IMAGE_TAG }}
+          docker push ${{ IMAGE }}-backend:${{ env.IMAGE_TAG }}
+        env:
+          IMAGE: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ github.event.repository.name }}
