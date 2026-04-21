@@ -8,7 +8,8 @@ class Settings(BaseSettings):
     aws_application_key: str = None
     s3_bucket: str = None
     s3_region: str = None
-
+    s3_endpoint_url: str = None
+    
     redis_host: str = None
     redis_port: str = None
 

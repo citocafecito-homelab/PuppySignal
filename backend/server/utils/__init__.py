@@ -40,11 +40,13 @@ def get_boto3_client(settings: config.Settings = Depends(get_settings)) -> S3Cli
             aws_access_key_id=settings.aws_application_key_id,
             aws_secret_access_key=settings.aws_application_key,
             region_name=settings.s3_region,
+            endpoint_url=settings.s3_endpoint_url,
             config=boto3.session.Config(
                 signature_version="s3v4",
                 s3={
                     "signature_version": "s3v4",
                     "use_accelerate_endpoint": False,
+                    "addressing_style": "auto"
                 },
             ),
         )
